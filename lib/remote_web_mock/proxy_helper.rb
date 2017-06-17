@@ -1,9 +1,11 @@
 require "net/http"
+require "net/https"
+require "net/uri"
 
 module RemoteWebMock
-  module Minitest
+  module ProxyHelper
     def self.proxy_uri
-      @@proxy_uri
+      @@proxy_uri ||= "localhost:9292"
     end
 
     def self.proxy_uri=(value)
@@ -25,6 +27,8 @@ module RemoteWebMock
     private
 
     class Proxy
+      attr_reader(:entries)
+
       def initialize(entries)
         @entries = entries
       end
@@ -41,7 +45,7 @@ module RemoteWebMock
       end
 
       def to_return_recorded_interaction(name)
-        path = File.join([Minitest.interactions_dir, name, ".json"].compact)
+        path = File.join([ProxyHelper.interactions_dir, name, ".json"].compact)
         json = File.read(path)
 
         to_return(
@@ -54,9 +58,9 @@ module RemoteWebMock
       private
 
       def json_request(params)
-        uri = Minitest.proxy_uri
+        uri = ProxyHelper.proxy_uri
         uri = URI(uri) unless uri.is_a?(URI)
-
+        require "pry-byebug"; binding.pry;
         req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
         req.body = params.to_json
 

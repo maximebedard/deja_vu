@@ -1,6 +1,7 @@
 require "json"
 require "securerandom"
 require "rack/request"
+require "remote_web_mock/proxy_helper"
 require "remote_web_mock/version"
 
 module RemoteWebMock
