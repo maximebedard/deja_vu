@@ -1,9 +1,9 @@
 require "test_helper"
 
-module RemoteWebMock
+module DejaVu
   class AppTest < Minitest::Test
     def setup
-      @app = RemoteWebMock::App.new
+      @app = DejaVu::App.new
       @env = Rack::MockRequest.env_for("http://example.com:8080/", {"REMOTE_ADDR" => "10.10.10.10"})
     end
 

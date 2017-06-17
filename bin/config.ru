@@ -1,4 +1,4 @@
 require "bundler/setup"
-require "remote_web_mock"
+require "deja_vu"
 
-run RemoteWebMock::App.new
+run DejaVu::App.new

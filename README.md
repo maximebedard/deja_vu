@@ -1,4 +1,4 @@
-# RemoteWebMock
+# Déjà vu
 
 Testing external services within browser tests is hard. This is
 an attempt toward making this a little simpler by setting up
@@ -41,7 +41,7 @@ However this has no effects since the request is executed by the browser, not th
 ## Installation
 
 ```sh
-$ gem install remote_web_mock
+$ gem install deja_vu
 ```
 
 ## Usage
@@ -53,8 +53,8 @@ tell a proxy to expect a given request and return the response
 we want if that request is really expected.
 
 ```rb
-RemoteWebMock::TestHelper.proxy_uri = "localhost:9292"
-RemoteWebMock::TestHelper.interactions_dir = "./"
+DejaVu::TestHelper.proxy_uri = "localhost:9292"
+DejaVu::TestHelper.interactions_dir = "./"
 
 class CheckoutFormBrowserTest < BrowserTest
   test "pay with magic provider " do
@@ -84,4 +84,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/maximebedard/remote_web_mock.
+Bug reports and pull requests are welcome on GitHub at https://github.com/maximebedard/deja_vu.

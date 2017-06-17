@@ -1,8 +1,8 @@
 require "net/http"
 require "net/https"
-require "net/uri"
+require "uri"
 
-module RemoteWebMock
+module DejaVu
   module ProxyHelper
     def self.proxy_uri
       @@proxy_uri ||= "localhost:9292"

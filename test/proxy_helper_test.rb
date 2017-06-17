@@ -1,6 +1,6 @@
 require "test_helper"
 
-module RemoteWebMock
+module DejaVu
   class ProxyHelperTest < Minitest::Test
     include ProxyHelper
 

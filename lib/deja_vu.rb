@@ -1,10 +1,10 @@
 require "json"
 require "securerandom"
 require "rack/request"
-require "remote_web_mock/proxy_helper"
-require "remote_web_mock/version"
+require "deja_vu/proxy_helper"
+require "deja_vu/version"
 
-module RemoteWebMock
+module DejaVu
   class Expectation
     attr_reader(
       :entries,
