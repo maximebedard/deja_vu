@@ -3,9 +3,11 @@ require "net/https"
 require "uri"
 
 module DejaVu
-  module ProxyHelper
+  module RemoteExpectation
+    DEFAULT_PROXY_URI = "http://localhost:9292"
+
     def self.proxy_uri
-      @@proxy_uri ||= "localhost:9292"
+      @@proxy_uri ||= DEFAULT_PROXY_URI
     end
 
     def self.proxy_uri=(value)
@@ -13,7 +15,7 @@ module DejaVu
     end
 
     def self.interactions_dir
-      @@interactions_dir
+      @@interactions_dir ||= nil
     end
 
     def self.interactions_dir=(value)
@@ -45,7 +47,7 @@ module DejaVu
       end
 
       def to_return_recorded_interaction(name)
-        path = File.join([ProxyHelper.interactions_dir, name, ".json"].compact)
+        path = File.join([RemoteExpectation.interactions_dir, "#{name}.json"].compact)
         json = File.read(path)
 
         to_return(
@@ -58,13 +60,11 @@ module DejaVu
       private
 
       def json_request(params)
-        uri = ProxyHelper.proxy_uri
-        uri = URI(uri) unless uri.is_a?(URI)
-        require "pry-byebug"; binding.pry;
-        req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
-        req.body = params.to_json
+        uri = URI.join(RemoteExpectation.proxy_uri, "/api/expectations")
 
-        Net::HTTP.start(uri.hostname, uri.port) { |http| http.request(req) }
+        http = Net::HTTP.new(uri.hostname, uri.port)
+        http.use_ssl = true if uri.scheme == "https"
+        http.post(uri.path, params.to_json, "Content-Type" => "application/json")
       end
     end
   end

@@ -1,7 +1,7 @@
 require "json"
 require "securerandom"
 require "rack/request"
-require "deja_vu/proxy_helper"
+require "deja_vu/remote_expectation"
 require "deja_vu/version"
 
 module DejaVu
