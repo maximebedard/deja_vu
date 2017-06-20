@@ -9,7 +9,7 @@ module DejaVu
 
     def test_push_expectation
       request = {
-        "entries" => [],
+        "query" => {},
         "response" => {
           "body" => "patate",
           "headers" => {},
@@ -28,8 +28,11 @@ module DejaVu
       assert_equal({"Content-Type" => "application/json"}, headers)
 
       assert_equal(JSON.parse(*body)["token"], @app.expectations[0].token)
-      assert_equal(request["entries"], @app.expectations[0].entries)
+      assert_equal(request["query"], @app.expectations[0].query)
       assert_equal(request["response"], @app.expectations[0].response)
+    end
+
+    def test_shift_expectation_matches_serilized_request
     end
 
     def test_shift_expectation_matches
@@ -56,6 +59,31 @@ module DejaVu
     def test_shift_expectation_empty
       assert_equal(
         [412, {}, ["no expectation set."]],
+        @app.call(@env)
+      )
+    end
+
+    def test_list_expectations
+      @env[Rack::PATH_INFO] = "/api/expectations"
+      @env["CONTENT_TYPE"] = "application/json"
+      @env[Rack::REQUEST_METHOD] = "GET"
+
+      expectation = make_expectation("patate", false)
+      @app.expectations = [expectation]
+
+      assert_equal(
+        [200, {"Content-Type" => "application/json"}, [@app.expectations.to_json]],
+        @app.call(@env)
+      )
+    end
+
+    def test_list_expectations_empty
+      @env[Rack::PATH_INFO] = "/api/expectations"
+      @env["CONTENT_TYPE"] = "application/json"
+      @env[Rack::REQUEST_METHOD] = "GET"
+
+      assert_equal(
+        [200, {"Content-Type" => "application/json"}, [@app.expectations.to_json]],
         @app.call(@env)
       )
     end

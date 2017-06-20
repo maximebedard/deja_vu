@@ -1,19 +1,35 @@
 module DejaVu
   class Expectation
     attr_reader(
-      :entries,
+      :query,
       :token,
       :response,
     )
 
-    def initialize(entries:, response:)
-      @entries = entries
-      @response = response
+    def initialize(query:, response:)
+      @query = Hash(query)
+      @response = Hash(response)
       @token = SecureRandom.hex
     end
 
-    def matches?(request)
-      true
+    def matches?(actual)
+      deep_matches?(actual, query)
+    end
+
+    private
+
+    def deep_matches?(a, b)
+      (a.keys & b.keys).all? { |k| compare?(a[k], b[k]) }
+    end
+
+    def compare?(a, b)
+      if [a, b].all? { |v| v.is_a?(Hash) }
+        deep_matches?(a, b)
+      elsif b.is_a?(Regexp)
+        a =~ b
+      else
+        a == b
+      end
     end
   end
 end
