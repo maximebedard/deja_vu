@@ -27,6 +27,8 @@ module DejaVu
         deep_matches?(a, b)
       elsif b.is_a?(Regexp)
         a =~ b
+      elsif b.is_a?(String) && b =~ /\(\?.*\:.*\)/
+        a =~ Regexp.new(b)
       else
         a == b
       end

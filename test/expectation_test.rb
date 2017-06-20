@@ -38,5 +38,10 @@ module DejaVu
       query = {a: /^max/}
       assert(Expectation.new(query: query, response: {}).matches?(a: "maximum"))
     end
+
+    def test_regex_as_a_string_matches?
+      query = {a: /^max/.to_s}
+      assert(Expectation.new(query: query, response: {}).matches?(a: "maximum"))
+    end
   end
 end

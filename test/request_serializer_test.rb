@@ -10,10 +10,10 @@ module DejaVu
     def test_serialization
       assert_equal(
         {
-          path: "/",
-          method: "GET",
-          body: "",
-          params: {},
+          "path" => "/",
+          "method" => "GET",
+          "body" => "",
+          "params" => {},
         },
         RequestSerializer.call(@request),
       )
@@ -27,10 +27,10 @@ module DejaVu
 
       assert_equal(
         {
-          path: "/api/expectations",
-          method: "GET",
-          body: "allo",
-          params: {},
+          "path" => "/api/expectations",
+          "method" => "GET",
+          "body" => "allo",
+          "params" => {},
           # params: {a: "b", b: 1},
         },
         RequestSerializer.call(@request),
