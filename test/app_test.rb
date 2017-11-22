@@ -32,7 +32,20 @@ module DejaVu
       assert_equal(request["response"], @app.expectations[0].response)
     end
 
-    def test_shift_expectation_matches_serilized_request
+    def test_setup_strategy
+      request = {
+        "strategy" => "matches",
+      }
+      @env[Rack::PATH_INFO] = "/api/strategy"
+      @env[Rack::RACK_INPUT] = StringIO.new(request.to_json)
+      @env[Rack::RACK_INPUT].set_encoding(Encoding::BINARY)
+      @env["CONTENT_TYPE"] = "application/json"
+      @env[Rack::REQUEST_METHOD] = "POST"
+
+      status, headers, body = @app.call(@env)
+
+      assert_equal(201, status)
+      assert_equal({"Content-Type" => "application/json"}, headers)
     end
 
     def test_shift_expectation_matches
@@ -51,7 +64,7 @@ module DejaVu
       @app.expectations = [expectation]
 
       assert_equal(
-        [422, {}, ["expectation(patate) did not match."]],
+        [422, {}, ["expectation=patate did not match."]],
         @app.call(@env)
       )
     end

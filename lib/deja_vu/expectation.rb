@@ -2,8 +2,8 @@ module DejaVu
   class Expectation
     attr_reader(
       :query,
-      :token,
       :response,
+      :token,
     )
 
     def initialize(query:, response:)
@@ -13,24 +13,24 @@ module DejaVu
     end
 
     def matches?(actual)
-      deep_matches?(actual, query)
+      deep_matches?(actual, @query)
     end
 
     private
 
-    def deep_matches?(a, b)
-      (a.keys & b.keys).all? { |k| compare?(a[k], b[k]) }
+    def deep_matches?(left, right)
+      (left.keys & right.keys).all? { |k| compare?(left[k], right[k]) }
     end
 
-    def compare?(a, b)
-      if [a, b].all? { |v| v.is_a?(Hash) }
-        deep_matches?(a, b)
-      elsif b.is_a?(Regexp)
-        a =~ b
-      elsif b.is_a?(String) && b =~ /\(\?.*\:.*\)/
-        a =~ Regexp.new(b)
+    def compare?(left, right)
+      if [left, right].all? { |v| v.is_a?(Hash) }
+        deep_matches?(left, right)
+      elsif right.is_a?(Regexp)
+        left =~ right
+      elsif right.is_a?(String) && right =~ /\(\?.*\:.*\)/
+        left =~ Regexp.new(right)
       else
-        a == b
+        left == right
       end
     end
   end
