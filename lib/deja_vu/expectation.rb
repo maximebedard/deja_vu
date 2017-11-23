@@ -6,10 +6,10 @@ module DejaVu
       :token,
     )
 
-    def initialize(query:, response:)
+    def initialize(query:, response:, token:)
       @query = Hash(query)
       @response = Hash(response)
-      @token = SecureRandom.hex
+      @token = token
     end
 
     def matches?(actual)

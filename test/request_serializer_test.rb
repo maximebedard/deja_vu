@@ -15,7 +15,7 @@ module DejaVu
           "body" => "",
           "params" => {},
         },
-        RequestSerializer.call(@request),
+        RequestSerializer.new(@request).to_h,
       )
     end
 
@@ -33,7 +33,7 @@ module DejaVu
           "params" => {},
           # params: {a: "b", b: 1},
         },
-        RequestSerializer.call(@request),
+        RequestSerializer.new(@request).to_h,
       )
     end
   end

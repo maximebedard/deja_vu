@@ -27,7 +27,6 @@ module DejaVu
       assert_equal(201, status)
       assert_equal({"Content-Type" => "application/json"}, headers)
 
-      assert_equal(JSON.parse(*body)["token"], @app.expectations[0].token)
       assert_equal(request["query"], @app.expectations[0].query)
       assert_equal(request["response"], @app.expectations[0].response)
     end
@@ -44,8 +43,42 @@ module DejaVu
 
       status, headers, body = @app.call(@env)
 
-      assert_equal(201, status)
+      assert_equal(200, status)
       assert_equal({"Content-Type" => "application/json"}, headers)
+    end
+
+    def test_clear_expectations
+      @app.expectations = [1, 2, 3]
+      request = {}
+
+      @env[Rack::PATH_INFO] = "/api/expectations/clear"
+      @env[Rack::RACK_INPUT] = StringIO.new(request.to_json)
+      @env[Rack::RACK_INPUT].set_encoding(Encoding::BINARY)
+      @env["CONTENT_TYPE"] = "application/json"
+      @env[Rack::REQUEST_METHOD] = "POST"
+
+      status, headers, body = @app.call(@env)
+
+      assert_equal(200, status)
+      assert_equal({"Content-Type" => "application/json"}, headers)
+      assert_equal(["{}"], body)
+      assert_empty(@app.expectations)
+    end
+
+    def test_setup_shitty_strategy
+      request = {
+        "strategy" => "poop",
+      }
+      @env[Rack::PATH_INFO] = "/api/strategy"
+      @env[Rack::RACK_INPUT] = StringIO.new(request.to_json)
+      @env[Rack::RACK_INPUT].set_encoding(Encoding::BINARY)
+      @env["CONTENT_TYPE"] = "application/json"
+      @env[Rack::REQUEST_METHOD] = "POST"
+
+      status, headers, body = @app.call(@env)
+
+      assert_equal(400, status)
+      assert_equal(["strategy=poop does not exists."], body)
     end
 
     def test_shift_expectation_matches
